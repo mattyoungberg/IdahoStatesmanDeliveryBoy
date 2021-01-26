@@ -70,7 +70,7 @@ class CustomHttpClient {
                 .followRedirects(HttpClient.Redirect.ALWAYS)
                 .sslContext(getSSLContext())
                 .cookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ALL))
-                .connectTimeout(Duration.ofMinutes(2L))
+                .connectTimeout(Duration.ofSeconds(30L))
                 .build();
     }
 
