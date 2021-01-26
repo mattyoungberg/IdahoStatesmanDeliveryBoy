@@ -9,8 +9,8 @@ class NewsBankURIBuilder {
     private NewsBankRoutes route = null;
     private String t = null;
     private boolean format = false;
-    private DocRef DocRef = null;
-    private DocRef origin = null;
+    private PageRef pageRef = null;
+    private OriginPage origin = null;
     private String issueId = null;
     private String url = null;
     private boolean query = false;
@@ -50,23 +50,23 @@ class NewsBankURIBuilder {
         return this;
     }
 
-    NewsBankURIBuilder setDocRef(DocRef DocRef) {
-        this.DocRef = DocRef;
+    NewsBankURIBuilder setDocRef(PageRef pageRef) {
+        this.pageRef = pageRef;
         return this;
     }
 
-    NewsBankURIBuilder setOrigin(DocRef origin) {
+    NewsBankURIBuilder setOrigin(OriginPage origin) {
         this.origin = origin;
         return this;
     }
 
-    NewsBankURIBuilder setIssueId(DocRef DocRef) {
-        this.issueId = DocRef.getIssueId();
+    NewsBankURIBuilder setIssueId(PageRef pageRef) {
+        this.issueId = pageRef.getIssueId();
         return this;
     }
 
-    NewsBankURIBuilder setUrl(DocRef DocRef) {
-        this.url = "image/" + DocRef.toString();
+    NewsBankURIBuilder setUrl(PageRef pageRef) {
+        this.url = "image/" + pageRef.getDocRefString();
         return this;
     }
 
@@ -109,11 +109,11 @@ class NewsBankURIBuilder {
     }
 
     private String getOptionalDocRefParamString() {
-        return DocRef != null ? "&docref=image/" + DocRef.toString() : "";
+        return pageRef != null ? "&docref=image/" + pageRef.getDocRefString() : "";
     }
 
     private String getOptionalOriginParamString() {
-        return origin != null ? "&origin=image/" + origin.toString() : "";
+        return origin != null ? "&origin=image/" + origin.getPageRef().getDocRefString() : "";
     }
 
     private String getOptionalIssueIdParamString() {
