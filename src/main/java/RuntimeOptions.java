@@ -13,7 +13,7 @@ class RuntimeOptions {
     private final String fileName;
 
     public RuntimeOptions(String[] args) throws ParseException {
-        this.options = buildOptions();
+        this.options = buildOptions(true);
         CommandLine cmd = parseOptions(args, options);
         this.libraryId = Long.parseLong(cmd.getOptionValue('i'));
         this.date = cmd.hasOption('d') ? LocalDate.parse(cmd.getOptionValue('d'), DateTimeFormatter.BASIC_ISO_DATE) : LocalDate.now();
@@ -26,9 +26,12 @@ class RuntimeOptions {
         return parser.parse(options, args);
     }
 
-    static Options buildOptions() {
+    static Options buildOptions(boolean idRequired) {
         Options options = new Options();
-        options.addOption(buildLibraryIdOption());
+        if (idRequired)
+            options.addOption(buildLibraryIdOption());
+        else
+            options.addOption(buildLibraryIdOptionNotRequired());
         options.addOption(buildDateOption());
         options.addOption(buildTargetDirectoryOption());
         options.addOption(buildFileNameOption());
@@ -40,7 +43,7 @@ class RuntimeOptions {
         HelpFormatter formatter = new HelpFormatter();
         String header = "Downloads and saves an issue of the Idaho Statesman made freely available through the Boise Library's relationship with Newsbank.";
         String footer = "Please report any problems at https://www.github.com/mattyoungberg/IdahoStatesmanDeliveryBoy.";
-        formatter.printHelp("Idaho Statesman Delivery Boy", header, buildOptions(), footer);
+        formatter.printHelp("Idaho Statesman Delivery Boy", header, buildOptions(true), footer);
     }
 
     long getLibraryId() {
@@ -60,8 +63,7 @@ class RuntimeOptions {
     }
 
     static boolean checkForHelp(String[] args) throws ParseException {
-        Options options = new Options();
-        options.addOption(buildHelpOption());
+        Options options = buildOptions(false);
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = parser.parse(options, args);
         return cmd.hasOption('h');
@@ -75,6 +77,17 @@ class RuntimeOptions {
                 .hasArg(true)
                 .numberOfArgs(1)
                 .required(true)
+                .build();
+    }
+
+    static Option buildLibraryIdOptionNotRequired() {
+        return Option.builder("i")
+                .argName("-i")
+                .longOpt("id")
+                .desc("required; A valid, 14-digit Boise library card ID number")
+                .hasArg(true)
+                .numberOfArgs(1)
+                .required(false)
                 .build();
     }
 
