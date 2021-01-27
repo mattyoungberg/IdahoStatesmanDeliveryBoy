@@ -6,12 +6,12 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        RuntimeOptions options = new RuntimeOptions(args);
-
-        if (options.includesHelpFlag()) {
-            options.getHelpMenu();
+        if (RuntimeOptions.checkForHelp(args)) {
+            RuntimeOptions.getHelpMenu();
             return;
         }
+
+        RuntimeOptions options = new RuntimeOptions(args);
 
         CustomHttpClient client = new CustomHttpClient(options.getLibraryId());
         client.authenticate();

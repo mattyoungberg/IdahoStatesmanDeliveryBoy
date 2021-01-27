@@ -11,16 +11,14 @@ class RuntimeOptions {
     private final LocalDate date;
     private final Path target;
     private final String fileName;
-    private final boolean includesHelpFlag;
 
     public RuntimeOptions(String[] args) throws ParseException {
         this.options = buildOptions();
         CommandLine cmd = parseOptions(args, options);
-        this.libraryId = setLibraryId(cmd);
+        this.libraryId = Long.parseLong(cmd.getOptionValue('i'));
         this.date = cmd.hasOption('d') ? LocalDate.parse(cmd.getOptionValue('d'), DateTimeFormatter.BASIC_ISO_DATE) : LocalDate.now();
         this.target = cmd.hasOption('t') ? Path.of(cmd.getOptionValue('t')) : Path.of(System.getProperty("user.dir"));
         this.fileName = cmd.hasOption('f') ? cmd.getOptionValue('f') : "IdahoStatesman_" + date.format(DateTimeFormatter.BASIC_ISO_DATE) + ".pdf";
-        this.includesHelpFlag = cmd.hasOption('h');
     }
 
     static CommandLine parseOptions(String[] args, Options options) throws ParseException {
@@ -38,18 +36,11 @@ class RuntimeOptions {
         return options;
     }
 
-    static long setLibraryId(CommandLine cmd) throws ParseException {
-        if (cmd.hasOption('i'))
-            return Long.parseLong(cmd.getOptionValue('i'));
-        else
-            throw new ParseException("Parsing of command line arguments failed. Reason: Missing required option: id");
-    }
-
-    void getHelpMenu() {
+    static void getHelpMenu() {
         HelpFormatter formatter = new HelpFormatter();
         String header = "Downloads and saves an issue of the Idaho Statesman made freely available through the Boise Library's relationship with Newsbank.";
         String footer = "Please report any problems at https://www.github.com/mattyoungberg/IdahoStatesmanDeliveryBoy.";
-        formatter.printHelp("Idaho Statesman Delivery Boy", header, options, footer);
+        formatter.printHelp("Idaho Statesman Delivery Boy", header, buildOptions(), footer);
     }
 
     long getLibraryId() {
@@ -68,8 +59,12 @@ class RuntimeOptions {
         return fileName;
     }
 
-    boolean includesHelpFlag() {
-        return includesHelpFlag;
+    static boolean checkForHelp(String[] args) throws ParseException {
+        Options options = new Options();
+        options.addOption(buildHelpOption());
+        CommandLineParser parser = new DefaultParser();
+        CommandLine cmd = parser.parse(options, args);
+        return cmd.hasOption('h');
     }
 
     static Option buildLibraryIdOption() {
@@ -79,7 +74,7 @@ class RuntimeOptions {
                 .desc("required; A valid, 14-digit Boise library card ID number")
                 .hasArg(true)
                 .numberOfArgs(1)
-                .required(false)  // true, but need to allow a singular -h option to be given
+                .required(true)
                 .build();
     }
 
