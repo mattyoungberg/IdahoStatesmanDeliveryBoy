@@ -2,7 +2,7 @@
 #### Download a free PDF version of today's Idaho Statesman with your Boise Library card, made possible by their relationship with NewsBank.
 
 ---
-##Readme Contents
+## Readme Contents
 * [The Story](#the-story)
 * [Usage](#usage)
 
