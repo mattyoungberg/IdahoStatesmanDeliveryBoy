@@ -6,7 +6,6 @@
 * [The Story](#the-story)
 * [Usage](#usage)
 
----
 ## The Story
 
 ##### Here's the thing: _I don't have any social media accounts._
@@ -25,7 +24,6 @@ Hence, the motive for this project was born. After pouring through mountains of 
 
 Enjoy.
 
----
 ## Usage
 
 
