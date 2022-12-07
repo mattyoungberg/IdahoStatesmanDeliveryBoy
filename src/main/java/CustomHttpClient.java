@@ -113,7 +113,7 @@ class CustomHttpClient {
     }
 
     private SSLContext createSSLContext() throws NoSuchAlgorithmException, CertificateException, KeyStoreException, KeyManagementException, IOException {
-        SSLContext context = SSLContext.getInstance("SSLv3");
+        SSLContext context = SSLContext.getInstance("TLSv1.3");
         TrustManager[] trustManagers = createTrustManagers();
         context.init(null, trustManagers, null);
         return context;
